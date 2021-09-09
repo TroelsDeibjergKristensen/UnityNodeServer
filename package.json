@@ -1,0 +1,24 @@
+{
+  "name": "unitynodeserver",
+  "version": "1.0.0",
+  "description": "Unity Node Server to connect to MongoDB",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DrunkenGenius/UnityNodeServer.git"
+  },
+  "keywords": [
+    "Unity",
+    "Node",
+    "Mongo"
+  ],
+  "author": "DrunkenGenius",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DrunkenGenius/UnityNodeServer/issues"
+  },
+  "homepage": "https://github.com/DrunkenGenius/UnityNodeServer#readme"
+}
