@@ -8,7 +8,6 @@ const {
 } = require("mongodb");
 const uri = "mongodb+srv://Dgenius:IevlMNDNxCQwATn4@cluster0.jsgan.mongodb.net/playerStore?retryWrites=true&w=majority";
 const client = new MongoClient(uri);
-const bcrypt = require('bcrypt');
 
 var collection;
 
@@ -129,10 +128,9 @@ app.get("/delete/:username", async (req, res, next) => {
 });
 
 app.get("/highscores", async (req, res, next) => {
-    console.log(req.params.username)
     try {
         //Check if username is already in collection
-        result = await collection.deleteOne({ username: req.params.username });
+        result = await collection.find({ username: req.params.username });
         console.log(result);
         res.send(result);
     } catch (e) {
