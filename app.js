@@ -96,7 +96,7 @@ app.get("/user/:username", async (req, res, next) => {
 });
 
 //Handling user update
-app.post("/update", async (req, res, next) => {
+app.post("/replaceOne", async (req, res, next) => {
     var username = req.body.username;
     var password = req.body.password;
     try {
@@ -109,8 +109,22 @@ app.post("/update", async (req, res, next) => {
             message: e.message
         });
     }
-    
+});
 
+//Handling update specific variable
+app.post("/update", async (req, res, next) => {
+    var username = req.body.username;
+    var password = req.body.password;
+    try {
+        //Check if username is already in collection
+        result = await collection.updateOne({ username: req.body.username }, req.body, {upsert: false});
+        console.log(result);
+        res.send(result);
+    } catch (e) {
+        res.status(500).send({
+            message: e.message
+        });
+    }
 });
 
 //Delete
