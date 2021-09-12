@@ -8,6 +8,9 @@ const {
 } = require("mongodb");
 const uri = "mongodb+srv://Dgenius:IevlMNDNxCQwATn4@cluster0.jsgan.mongodb.net/playerStore?retryWrites=true&w=majority";
 const client = new MongoClient(uri);
+if (process.env.NODE_ENV !== 'production') {
+    require('dotenv').config();
+}
 
 var collection;
 
@@ -142,7 +145,7 @@ app.get("/highscores", async (req, res, next) => {
 
 });
 
-app.listen("3000", async () => {
+app.listen(process.env.PORT, async () => {
     try {
         await client.connect();
         collection = client.db("AlienAdventure").collection("Player");
