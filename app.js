@@ -101,7 +101,7 @@ app.post("/update", async (req, res, next) => {
     var password = req.body.password;
     try {
         //Check if username is already in collection
-        result = await collection.update({ username: req.body.username }, req.body, {upsert: false});
+        result = await collection.updateOne({ username: req.body.username }, req.body, {upsert: false});
         console.log(result);
         res.send(result);
     } catch (e) {
