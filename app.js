@@ -192,7 +192,8 @@ app.get('/highScores', function (request, respond) {
 	});
 });
 
-app.listen(3000, async () => {
+//app.listen(3000, async () => {
+app.listen(process.env.PORT, async () => {
     try {
         await client.connect();
         collection = client.db("AlienAdventure").collection("Player");
