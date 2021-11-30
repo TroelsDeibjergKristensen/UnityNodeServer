@@ -20,6 +20,11 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 
+app.get("/", async (req, res, next) => {
+    console.log("Hello world");
+    res.send("Hello World");
+});
+
 // Handling user signup
 app.post("/register", async (req, res, next) => {
     try {
@@ -46,9 +51,7 @@ app.post("/register", async (req, res, next) => {
 
 // Handling user login
 app.post("/login", async (req, res, next) => {
-    let username = req.body.username;
-    let password = req.body.password;
-
+    
     try {
         //Check if username is already in collection
         user = await collection.findOne({
@@ -62,7 +65,7 @@ app.post("/login", async (req, res, next) => {
                 message: "Username or password incorrect"
             });
         } else {
-            if (user.password == password)
+            if (user.password == req.body.password)
                 res.send(user);
             else
             res.status(401).send({
@@ -100,6 +103,7 @@ app.post("/replaceOne", async (req, res, next) => {
     var username = req.body.username;
     var password = req.body.password;
     console.log("replaceOne");
+    console.log(req.body);
     try {
         //Check if username is already in collection
         result = await collection.replaceOne({ username: req.body.username }, req.body, {upsert: false});
@@ -146,22 +150,49 @@ app.get("/delete/:username", async (req, res, next) => {
 
 });
 
-app.get("/highscores", async (req, res, next) => {
-    try {
-        //Check if username is already in collection
-        result = await collection.find({ username: req.params.username });
-        console.log(result);
-        res.send(result);
-    } catch (e) {
-        res.status(500).send({
-            message: e.message
-        });
-    }
-    
+//READ highscores
+app.get('/highScores', function (request, respond) {
 
+	//Extracts the field values from the request
+	var sortName = request.query['sortName'];
+
+	let sort;
+	switch(sortName){
+		case "jumps":
+			sort = {jumps: -1}
+			break;
+		case "score":
+			sort = {score: -1}
+			break;
+        case "timeControlllingBothAliens":
+            sort = {timeControlllingBothAliens: -1}
+            break;
+		default:
+			sort = {score: -1}
+	}
+
+	//find all documents in collection and sort by jumps variable. 1 for ascending and -1 for descending
+	collection.find().sort(sort).toArray(function (findError, result) {
+		if (!findError) {
+			console.log("MongoDB - Find: No Errors");
+			let resultArray = result.slice(0,20);
+            //Remove Data that highscore doesn't need
+            resultArray.forEach(user => {
+                delete user.password;
+                delete user.objectHashCodeInWorld;
+                delete user.objectHashCodePickedUp;
+                delete user.worldInitialized;
+            });
+            console.log(resultArray);
+			respond.send(JSON.stringify(resultArray));
+		} else {
+			console.log("MongoDB - Find: Error");
+			console.log(findError);
+		}
+	});
 });
 
-app.listen(process.env.PORT, async () => {
+app.listen(3000, async () => {
     try {
         await client.connect();
         collection = client.db("AlienAdventure").collection("Player");
